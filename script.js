@@ -23,7 +23,7 @@ async function fetchStockData(ticker) {
     const res = await fetch(url);
     const data = await res.json();
 
-    console.log("Alpha Vantage response:", data); // Debug output to console
+    console.log("Alpha Vantage full response:", data);
 
     if (data["Error Message"]) {
       alert("Invalid ticker symbol. Please try again.");
@@ -36,7 +36,7 @@ async function fetchStockData(ticker) {
     }
 
     if (!data["Time Series (Daily)"]) {
-      alert("Unexpected response format from API.");
+      alert("Unexpected response format from API:\n" + JSON.stringify(data, null, 2));
       return;
     }
 
