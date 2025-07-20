@@ -15,6 +15,15 @@
   <section id="calculator">
     <h2>Investment Calculator</h2>
     <label>Ticker Symbol: <input type="text" id="ticker" /></label>
+    <label>Exchange:
+      <select id="exchange">
+        <option value="NASDAQ" selected>NASDAQ</option>
+        <option value="NYSE">NYSE</option>
+        <option value="AMEX">AMEX</option>
+        <option value="OTC">OTC</option>
+        <!-- Add more if needed -->
+      </select>
+    </label>
     <label>Initial Investment: <input type="number" id="amount" /></label>
     <label>Years: <input type="number" id="years" /></label>
     <button id="calculateBtn">Calculate</button>
