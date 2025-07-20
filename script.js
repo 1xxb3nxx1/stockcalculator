@@ -142,13 +142,14 @@ document.getElementById('calculateBtn').addEventListener('click', async () => {
   // Total projected value = futureValue + dividends earned (no reinvestment here)
   const totalProjected = futureValue + estimatedDividendsEarned;
 
-  // Show results
-  const resultText = `
+  // Show results and dividend info separately
+  document.getElementById('results').innerHTML = `
     If you invest $${amount.toFixed(2)} in ${ticker} for ${years} years at an estimated 8% annual return, your investment could grow to:<br>
-    <strong>$${futureValue.toFixed(2)}</strong><br><br>
+    <strong>$${futureValue.toFixed(2)}</strong>
+  `;
+
+  document.getElementById('dividendInfo').innerHTML = `
     Estimated dividends earned over ${years} years: <strong>$${estimatedDividendsEarned.toFixed(2)}</strong><br>
     <strong>Total projected value including dividends:</strong> $${totalProjected.toFixed(2)}
   `;
-
-  document.getElementById('results').innerHTML = resultText;
 });
