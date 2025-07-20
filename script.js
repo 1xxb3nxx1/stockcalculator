@@ -45,10 +45,12 @@ async function fetchStockData(ticker) {
 function drawChart(ticker, labels, prices) {
   const ctx = document.getElementById('stockChart').getContext('2d');
 
-  if (window.stockChart) {
+  // If a chart already exists and is valid, destroy it first
+  if (window.stockChart instanceof Chart) {
     window.stockChart.destroy();
   }
 
+  // Now create and store the new chart
   window.stockChart = new Chart(ctx, {
     type: 'line',
     data: {
@@ -72,6 +74,7 @@ function drawChart(ticker, labels, prices) {
     }
   });
 }
+
 
 // Event listener to fetch data when ticker input loses focus
 document.getElementById('ticker').addEventListener('blur', () => {
