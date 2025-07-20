@@ -28,13 +28,11 @@ async function fetchStockData(ticker) {
   }
 }
 
-function loadTradingViewWidget(ticker) {
+// Load TradingView chart widget dynamically for the given ticker (with exchange prefix)
+function loadTradingViewWidget(symbol) {
   const containerId = 'tradingview_chart';
   const container = document.getElementById(containerId);
   container.innerHTML = ''; // Clear previous widget
-
-  // Default to NASDAQ if no prefix
-  const formattedSymbol = ticker.includes(':') ? ticker : `NASDAQ:${ticker}`;
 
   if (typeof TradingView === 'undefined') {
     console.error('TradingView library not loaded!');
@@ -44,7 +42,7 @@ function loadTradingViewWidget(ticker) {
   new TradingView.widget({
     width: "100%",
     height: 400,
-    symbol: formattedSymbol,
+    symbol: symbol,
     interval: "D",
     timezone: "America/New_York",
     theme: "light",
@@ -57,14 +55,30 @@ function loadTradingViewWidget(ticker) {
   });
 }
 
+// Trigger fetch on ticker input blur or exchange change
+function updateStockData() {
+  const tickerInput = document.getElementById('ticker');
+  const exchangeSelect = document.getElementById('exchange');
+  const ticker = tickerInput.value.trim().toUpperCase();
+  const exchange = exchangeSelect.value;
+  if (ticker) {
+    const fullSymbol = `${exchange}:${ticker}`;
+    fetchStockData(fullSymbol);
+  }
+}
+
+document.getElementById('ticker').addEventListener('blur', updateStockData);
+document.getElementById('exchange').addEventListener('change', updateStockData);
 
 // Calculate investment value on button click
 document.getElementById('calculateBtn').addEventListener('click', () => {
   const amount = parseFloat(document.getElementById('amount').value);
   const years = parseFloat(document.getElementById('years').value);
-  const ticker = document.getElementById('ticker').value.trim().toUpperCase();
+  const tickerInput = document.getElementById('ticker').value.trim().toUpperCase();
+  const exchange = document.getElementById('exchange').value;
+  const ticker = `${exchange}:${tickerInput}`;
 
-  if (isNaN(amount) || isNaN(years) || !ticker) {
+  if (isNaN(amount) || isNaN(years) || !tickerInput) {
     alert('Please enter a valid ticker, investment amount, and years.');
     return;
   }
@@ -77,13 +91,4 @@ document.getElementById('calculateBtn').addEventListener('click', () => {
     If you invest $${amount.toFixed(2)} in ${ticker} for ${years} years at an estimated 8% annual return, your investment could grow to:<br>
     <strong>$${futureValue.toFixed(2)}</strong>
   `;
-});
-
-// Trigger fetch on ticker input blur
-document.getElementById('ticker').addEventListener('blur', () => {
-  const tickerInput = document.getElementById('ticker');
-  const ticker = tickerInput.value.trim().toUpperCase();
-  if (ticker) {
-    fetchStockData(ticker);
-  }
 });
