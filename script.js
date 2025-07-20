@@ -84,3 +84,29 @@ document.getElementById('ticker').addEventListener('blur', () => {
     fetchStockData(ticker);
   }
 });
+
+// ======================
+// Investment Calculator
+// ======================
+
+function calculateInvestment() {
+  const amount = parseFloat(document.getElementById('amount').value);
+  const years = parseFloat(document.getElementById('years').value);
+  const ticker = document.getElementById('ticker').value.trim().toUpperCase();
+
+  if (isNaN(amount) || isNaN(years) || !ticker) {
+    alert('Please enter a valid ticker, investment amount, and years.');
+    return;
+  }
+
+  const annualReturnRate = 0.08;
+  const futureValue = amount * Math.pow(1 + annualReturnRate, years);
+
+  const resultText = `
+    If you invest $${amount.toFixed(2)} in ${ticker} for ${years} years 
+    at an estimated 8% annual return, your investment could grow to:
+    <strong>$${futureValue.toFixed(2)}</strong>
+  `;
+
+  document.getElementById('results').innerHTML = resultText;
+}
