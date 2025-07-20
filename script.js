@@ -1,4 +1,4 @@
-const API_KEY = 'QRYH4KEEQGS3ZO9O'; // Your Alpha Vantage API key
+const API_KEY = '1c59569b049248a3a6fe4417fa73eb29'; // Your Twelve Data API key
 
 function calculateInvestment() {
   const amount = parseFloat(document.getElementById('amount').value);
@@ -17,37 +17,34 @@ function calculateInvestment() {
 }
 
 async function fetchStockData(ticker) {
-  const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${ticker}&apikey=${API_KEY}`;
+  const url = `https://api.twelvedata.com/time_series?symbol=${ticker}&interval=1day&apikey=${API_KEY}&outputsize=30`;
 
   try {
     const res = await fetch(url);
     const data = await res.json();
 
-    console.log("Alpha Vantage full response:", data);
+    console.log("Twelve Data response:", data);
 
-    if (data["Error Message"]) {
-      alert("Invalid ticker symbol. Please try again.");
+    if (data.status === 'error') {
+      alert(data.message || "Invalid ticker or API error.");
       return;
     }
 
-    if (data["Note"]) {
-      alert("API call frequency exceeded. Please wait a minute and try again.");
+    if (!data.values || data.values.length === 0) {
+      alert("No data found for this ticker.");
       return;
     }
 
-    if (!data["Time Series (Daily)"]) {
-      alert("Unexpected response format from API:\n" + JSON.stringify(data, null, 2));
-      return;
-    }
+    // Twelve Data returns newest data first, so reverse for oldest first
+    const values = data.values.reverse();
 
-    const dailyData = data["Time Series (Daily)"];
-    const labels = Object.keys(dailyData).slice(0, 30).reverse(); // Last 30 days
-    const prices = labels.map(date => parseFloat(dailyData[date]["4. close"]));
+    const labels = values.map(item => item.datetime);
+    const prices = values.map(item => parseFloat(item.close));
 
     drawChart(ticker, labels, prices);
   } catch (error) {
     console.error("Error fetching stock data:", error);
-    alert("Failed to fetch stock data. Please check your internet connection and try again.");
+    alert("Failed to fetch stock data. Please try again.");
   }
 }
 
