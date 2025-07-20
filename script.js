@@ -1,34 +1,71 @@
+const API_KEY = 'QRYH4KEEQGS3ZO9O'; // Your Alpha Vantage API key
+
 function calculateInvestment() {
   const amount = parseFloat(document.getElementById('amount').value);
   const years = parseInt(document.getElementById('years').value);
-  const growthRate = 0.08; // Assume 8% average return
+  const growthRate = 0.08; // 8% assumed return
   const futureValue = amount * Math.pow(1 + growthRate, years);
-  document.getElementById('results').innerText = 
+
+  document.getElementById('results').innerText =
     `Estimated value after ${years} years: $${futureValue.toFixed(2)}`;
 }
 
 async function fetchStockData(ticker) {
-  // Mock data; replace with live API call
-  const labels = ['2020', '2021', '2022', '2023', '2024'];
-  const data = [100, 120, 140, 130, 150];
+  const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${ticker}&apikey=${API_KEY}`;
+  
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
 
+    if (!data["Time Series (Daily)"]) {
+      alert("Invalid ticker or API limit hit. Try again later.");
+      return;
+    }
+
+    const dailyData = data["Time Series (Daily)"];
+    const labels = Object.keys(dailyData).slice(0, 30).reverse(); // last 30 days
+    const prices = labels.map(date => parseFloat(dailyData[date]["4. close"]));
+
+    drawChart(ticker, labels, prices);
+  } catch (error) {
+    console.error("Error fetching stock data:", error);
+    alert("Error fetching data.");
+  }
+}
+
+function drawChart(ticker, labels, prices) {
   const ctx = document.getElementById('stockChart').getContext('2d');
-  new Chart(ctx, {
+
+  // Destroy existing chart if already created
+  if (window.stockChart) {
+    window.stockChart.destroy();
+  }
+
+  window.stockChart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: labels,
+      labels,
       datasets: [{
-        label: `${ticker} Stock Price`,
-        data: data,
-        borderColor: 'green',
+        label: `${ticker} Price (Last 30 Days)`,
+        data: prices,
+        borderColor: 'blue',
+        borderWidth: 2,
         fill: false,
+        pointRadius: 0,
       }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          ticks: { maxTicksLimit: 10 }
+        }
+      }
     }
   });
 }
 
-// Optional: call fetchStockData when ticker input changes
 document.getElementById('ticker').addEventListener('blur', () => {
   const ticker = document.getElementById('ticker').value.toUpperCase();
-  fetchStockData(ticker);
+  if (ticker) fetchStockData(ticker);
 });
