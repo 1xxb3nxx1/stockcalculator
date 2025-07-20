@@ -28,28 +28,35 @@ async function fetchStockData(ticker) {
   }
 }
 
-// Load TradingView chart widget dynamically for the given ticker
-let tradingViewWidget = null;
 function loadTradingViewWidget(ticker) {
-  // Remove existing widget if present
-  const container = document.getElementById('tradingview_chart');
+  const containerId = 'tradingview_chart';
+  const container = document.getElementById(containerId);
   container.innerHTML = ''; // Clear previous widget
 
-  tradingViewWidget = new TradingView.widget({
-    "width": "100%",
-    "height": 400,
-    "symbol": ticker.includes('.') ? ticker : `NASDAQ:${ticker}`, // assume NASDAQ if no exchange prefix
-    "interval": "D",
-    "timezone": "America/New_York",
-    "theme": "light",
-    "style": "1",
-    "locale": "en",
-    "toolbar_bg": "#f1f3f6",
-    "enable_publishing": false,
-    "allow_symbol_change": true,
-    "container_id": "tradingview_chart"
+  // Default to NASDAQ if no prefix
+  const formattedSymbol = ticker.includes(':') ? ticker : `NASDAQ:${ticker}`;
+
+  if (typeof TradingView === 'undefined') {
+    console.error('TradingView library not loaded!');
+    return;
+  }
+
+  new TradingView.widget({
+    width: "100%",
+    height: 400,
+    symbol: formattedSymbol,
+    interval: "D",
+    timezone: "America/New_York",
+    theme: "light",
+    style: "1",
+    locale: "en",
+    toolbar_bg: "#f1f3f6",
+    enable_publishing: false,
+    allow_symbol_change: true,
+    container_id: containerId
   });
 }
+
 
 // Calculate investment value on button click
 document.getElementById('calculateBtn').addEventListener('click', () => {
