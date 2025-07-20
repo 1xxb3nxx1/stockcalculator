@@ -23,20 +23,20 @@ async function fetchStockData(ticker) {
     const res = await fetch(url);
     const data = await res.json();
 
-    console.log("Twelve Data response:", data);
+    console.log("Twelve Data API response:", data);
 
     if (data.status === 'error') {
-      alert(data.message || "Invalid ticker or API error.");
+      alert("API Error:\n" + (data.message || JSON.stringify(data)));
       return;
     }
 
-    if (!data.values || data.values.length === 0) {
-      alert("No data found for this ticker.");
+    if (!data.values || !Array.isArray(data.values) || data.values.length === 0) {
+      alert("No data available for the ticker.");
       return;
     }
 
-    // Twelve Data returns newest data first, so reverse for oldest first
-    const values = data.values.reverse();
+    // Twelve Data returns latest data first, reverse for chronological order
+    const values = data.values.slice().reverse();
 
     const labels = values.map(item => item.datetime);
     const prices = values.map(item => parseFloat(item.close));
