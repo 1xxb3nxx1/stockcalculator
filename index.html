@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Investment Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Stock Investment Calculators</h1>
+    <p>Subscribe for $20/month to access powerful tools</p>
+  </header>
+
+  <section id="calculator">
+    <h2>Investment Calculator</h2>
+    <label>Ticker Symbol: <input type="text" id="ticker" /></label>
+    <label>Initial Investment: <input type="number" id="amount" /></label>
+    <label>Years: <input type="number" id="years" /></label>
+    <button onclick="calculateInvestment()">Calculate</button>
+    <div id="results"></div>
+  </section>
+
+  <section id="chart">
+    <h2>Stock Chart</h2>
+    <div id="stockChartContainer">
+      <!-- Chart will render here -->
+      <canvas id="stockChart" height="200"></canvas>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
