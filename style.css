@@ -1,79 +1,151 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-
+/* === General Page Setup === */
 body {
-  font-family: 'Inter', sans-serif;
+  background-color: #121212;
+  color: #e0e0e0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 20px;
-  background: #f0f2f5;
-  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* Header */
 header {
-  background: #003366;
-  color: white;
-  padding: 30px 15px;
   text-align: center;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 30px;
 }
 
-h1 {
-  margin-bottom: 10px;
-  font-size: 2rem;
+header h1 {
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 0.2rem;
+  color: #80cbc4;
 }
 
-section {
-  margin-top: 30px;
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+header p {
+  font-size: 1.1rem;
+  color: #b0b0b0;
+  margin-top: 0;
 }
 
-label {
-  display: block;
-  margin: 10px 0 5px;
-  font-weight: 600;
-}
-
-input {
+/* === Calculator Section === */
+#calculator {
+  background-color: #1e1e1e;
+  padding: 25px 30px;
+  border-radius: 10px;
   width: 100%;
-  max-width: 300px;
-  padding: 10px 12px;
+  max-width: 500px;
+  box-shadow: 0 0 12px rgba(0, 150, 136, 0.4);
+  margin-bottom: 40px;
+}
+
+#calculator h2 {
+  margin-bottom: 20px;
+  color: #80cbc4;
+  font-weight: 600;
+  font-size: 1.8rem;
+}
+
+#calculator label {
+  display: block;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
   font-size: 1rem;
-  transition: border-color 0.3s;
+  font-weight: 500;
 }
 
-input:focus {
-  border-color: #003366;
+#calculator input[type="text"],
+#calculator input[type="number"],
+#calculator select {
+  width: 100%;
+  padding: 8px 12px;
+  margin-top: 6px;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #2a2a2a;
+  color: #eee;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+#calculator input[type="text"]:focus,
+#calculator input[type="number"]:focus,
+#calculator select:focus {
   outline: none;
+  border-color: #80cbc4;
+  box-shadow: 0 0 6px #80cbc4;
 }
 
-button {
-  background-color: #003366;
-  color: white;
-  padding: 12px 20px;
-  font-size: 1rem;
+/* Button */
+#calculateBtn {
+  background-color: #009688;
+  color: #fff;
   border: none;
+  padding: 12px 18px;
+  font-size: 1.1rem;
+  font-weight: 600;
   border-radius: 6px;
   cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
   transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #0055aa;
+#calculateBtn:hover {
+  background-color: #00796b;
 }
 
-#results,
-#currentPrice {
-  margin-top: 15px;
+/* Results & Price Text */
+#results, #dividendInfo, #currentPrice {
+  margin-top: 20px;
   font-size: 1.1rem;
-  font-weight: 600;
+  line-height: 1.5;
+  color: #cfd8dc;
+  word-wrap: break-word;
 }
 
-canvas {
-  max-width: 100%;
+/* === Chart Section === */
+#chart {
+  background-color: #1e1e1e;
+  padding: 25px 30px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 900px;
+  box-shadow: 0 0 12px rgba(0, 150, 136, 0.4);
+  margin-bottom: 40px;
+}
+
+#chart h2 {
+  color: #80cbc4;
+  font-weight: 600;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+}
+
+#tradingview_chart {
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #121212;
+  box-shadow: inset 0 0 20px #00796b33;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+
+  #calculator, #chart {
+    padding: 20px;
+    max-width: 100%;
+  }
+
+  header h1 {
+    font-size: 1.8rem;
+  }
+
+  #calculator h2, #chart h2 {
+    font-size: 1.5rem;
+  }
 }
