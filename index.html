@@ -14,20 +14,12 @@
 
   <section id="calculator">
     <h2>Investment Calculator</h2>
-    <label>
-      Ticker Symbol: 
-      <input type="text" id="ticker" placeholder="e.g. AAPL" />
-    </label>
-    <label>
-      Initial Investment: 
-      <input type="number" id="amount" />
-    </label>
-    <label>
-      Years: 
-      <input type="number" id="years" />
-    </label>
+    <label>Ticker Symbol: <input type="text" id="ticker" /></label>
+    <label>Initial Investment: <input type="number" id="amount" /></label>
+    <label>Years: <input type="number" id="years" /></label>
     <button id="calculateBtn">Calculate</button>
-    <div id="results" style="margin-top: 10px;"></div>
+    <div id="results"></div>
+    <div id="dividendInfo" style="margin-top: 15px; font-weight: bold;"></div>
     <div id="currentPrice" style="font-weight: bold; margin-top: 10px;"></div>
   </section>
 
