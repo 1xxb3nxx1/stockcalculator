@@ -84,8 +84,8 @@ document.getElementById('ticker').addEventListener('blur', () => {
   }
 });
 
-// Investment calculator logic
-function calculateInvestment() {
+// Investment calculator logic (triggered on button click)
+document.getElementById('calculateBtn').addEventListener('click', () => {
   const amount = parseFloat(document.getElementById('amount').value);
   const years = parseFloat(document.getElementById('years').value);
   const ticker = document.getElementById('ticker').value.trim().toUpperCase();
@@ -95,7 +95,7 @@ function calculateInvestment() {
     return;
   }
 
-  const annualReturnRate = 0.08; // Estimated average return
+  const annualReturnRate = 0.08; // estimated average return
   const futureValue = amount * Math.pow(1 + annualReturnRate, years);
 
   const resultText = `
@@ -105,4 +105,4 @@ function calculateInvestment() {
   `;
 
   document.getElementById('results').innerHTML = resultText;
-}
+});
