@@ -1,5 +1,6 @@
-const API_KEY = '1c59569b049248a3a6fe4417fa73eb29'; // Your Twelve Data API key
+const API_KEY = '1c59569b049248a3a6fe4417fa73eb29'; // Twelve Data API Key
 
+// Fetch stock data and update chart + current price
 async function fetchStockData(ticker) {
   const url = `https://api.twelvedata.com/time_series?symbol=${ticker}&interval=1day&apikey=${API_KEY}&outputsize=30`;
 
@@ -10,17 +11,12 @@ async function fetchStockData(ticker) {
     const data = await res.json();
     console.log("Twelve Data API response:", data);
 
-    if (data.status === 'error') {
-      alert(`API error: ${data.message}`);
+    if (data.status === 'error' || !data.values || data.values.length === 0) {
+      alert('Error fetching stock data or no data found for this ticker.');
       return;
     }
 
-    if (!data.values || data.values.length === 0) {
-      alert('No data available for this ticker.');
-      return;
-    }
-
-    // Latest price is close of first element (newest date)
+    // Latest price is the first value (most recent)
     const latestPrice = parseFloat(data.values[0].close);
 
     // Display current price
@@ -29,8 +25,8 @@ async function fetchStockData(ticker) {
       priceEl.innerText = `Current Price for ${ticker}: $${latestPrice.toFixed(2)}`;
     }
 
-    // Prepare data for chart (reverse for chronological order)
-    const values = data.values.slice().reverse();
+    // Prepare chart data
+    const values = data.values.slice().reverse(); // oldest to newest
     const labels = values.map(item => item.datetime);
     const prices = values.map(item => parseFloat(item.close));
 
@@ -42,15 +38,16 @@ async function fetchStockData(ticker) {
   }
 }
 
+// Draw the stock price chart using Chart.js
 function drawChart(ticker, labels, prices) {
   const ctx = document.getElementById('stockChart').getContext('2d');
 
-  // If a chart already exists and is valid, destroy it first
+  // Destroy existing chart if it exists
   if (window.stockChart instanceof Chart) {
     window.stockChart.destroy();
   }
 
-  // Now create and store the new chart
+  // Create new chart
   window.stockChart = new Chart(ctx, {
     type: 'line',
     data: {
@@ -69,14 +66,16 @@ function drawChart(ticker, labels, prices) {
       scales: {
         x: {
           ticks: { maxTicksLimit: 10 }
+        },
+        y: {
+          beginAtZero: false
         }
       }
     }
   });
 }
 
-
-// Event listener to fetch data when ticker input loses focus
+// Trigger fetch on input blur
 document.getElementById('ticker').addEventListener('blur', () => {
   const tickerInput = document.getElementById('ticker');
   const ticker = tickerInput.value.trim().toUpperCase();
@@ -85,10 +84,7 @@ document.getElementById('ticker').addEventListener('blur', () => {
   }
 });
 
-// ======================
-// Investment Calculator
-// ======================
-
+// Investment calculator logic
 function calculateInvestment() {
   const amount = parseFloat(document.getElementById('amount').value);
   const years = parseFloat(document.getElementById('years').value);
@@ -99,7 +95,7 @@ function calculateInvestment() {
     return;
   }
 
-  const annualReturnRate = 0.08;
+  const annualReturnRate = 0.08; // Estimated average return
   const futureValue = amount * Math.pow(1 + annualReturnRate, years);
 
   const resultText = `
