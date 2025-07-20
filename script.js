@@ -35,13 +35,21 @@ async function fetchStockData(ticker) {
       return;
     }
 
-    // Twelve Data returns latest data first, reverse for chronological order
+    // Latest price is the close price of the first item (newest)
+    const latestPrice = parseFloat(data.values[0].close);
+
+    // Display current price on the page
+    document.getElementById('currentPrice').innerText =
+      `Current Price for ${ticker}: $${latestPrice.toFixed(2)}`;
+
+    // Reverse the values for chronological order in chart
     const values = data.values.slice().reverse();
 
     const labels = values.map(item => item.datetime);
     const prices = values.map(item => parseFloat(item.close));
 
     drawChart(ticker, labels, prices);
+
   } catch (error) {
     console.error("Error fetching stock data:", error);
     alert("Failed to fetch stock data. Please try again.");
@@ -79,6 +87,7 @@ function drawChart(ticker, labels, prices) {
   });
 }
 
+// Trigger fetch on ticker input blur (when user leaves the input)
 document.getElementById('ticker').addEventListener('blur', () => {
   const ticker = document.getElementById('ticker').value.trim().toUpperCase();
   if (ticker) {
